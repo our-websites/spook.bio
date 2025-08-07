@@ -7,7 +7,7 @@ const path = require("path");
 const app = express();
 
 app.use(session({
-  secret: "TotallyASecretLOL",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
@@ -17,11 +17,13 @@ app.use(express.static("public"));
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const GUILD_ID = process.env.GUILD_ID;
 
 app.get("/auth/discord", (req, res) => {
-  const scope = "identify email";
-  const discordAuthUrl = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
-  res.redirect(discordAuthUrl);
+  const scope = "identify email guilds.join";
+  const authUrl = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+  res.redirect(authUrl);
 });
 
 app.get("/auth/discord/callback", async (req, res) => {
@@ -29,13 +31,14 @@ app.get("/auth/discord/callback", async (req, res) => {
   if (!code) return res.send("No code provided");
 
   try {
+    // Exchange code for access token
     const tokenResponse = await axios.post("https://discord.com/api/oauth2/token", new URLSearchParams({
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       grant_type: "authorization_code",
-      code: code,
+      code,
       redirect_uri: REDIRECT_URI,
-      scope: "identify email"
+      scope: "identify email guilds.join"
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -44,17 +47,30 @@ app.get("/auth/discord/callback", async (req, res) => {
 
     const accessToken = tokenResponse.data.access_token;
 
+    // Get user info
     const userResponse = await axios.get("https://discord.com/api/users/@me", {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
 
-    req.session.user = userResponse.data;
+    const user = userResponse.data;
+    req.session.user = user;
+
+    // Auto-join the server
+    await axios.put(`https://discord.com/api/guilds/${GUILD_ID}/members/${user.id}`, {
+      access_token: accessToken
+    }, {
+      headers: {
+        "Authorization": `Bot ${BOT_TOKEN}`,
+        "Content-Type": "application/json"
+      }
+    });
+
     res.redirect("/dashboard");
   } catch (err) {
     console.error(err.response?.data || err);
-    res.send("OAuth2 failed.");
+    res.send("OAuth2 or guild join failed.");
   }
 });
 
