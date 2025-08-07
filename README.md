@@ -1,2 +1,4 @@
-# website
-The official spook.bio site.
+# Website
+https://spook.bio
+## The Official spook.bio Website.
+
