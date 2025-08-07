@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login with Discord</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #2c2f33;
+      color: white;
+      text-align: center;
+      padding-top: 100px;
+    }
+    .login-box {
+      background: #23272a;
+      padding: 40px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .discord-btn {
+      background-color: #5865F2;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .discord-btn:hover {
+      background-color: #4752c4;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>Login to Your Account</h1>
+    <button class="discord-btn" onclick="loginWithDiscord()">Sign in with Discord</button>
+  </div>
+
+  <script>
+    function loginWithDiscord() {
+      const clientId = '1402955374117650463';
+      const redirectUri = encodeURIComponent('https://api.spook.bio/login');
+      const scope = encodeURIComponent('identify email');
+      const responseType = 'code';
+      const discordOAuthUrl = 
+        `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+      window.location.href = discordOAuthUrl;
+    }
+  </script>
+</body>
+</html>
