@@ -79,7 +79,7 @@
     async function getUser() {
       const res = await fetch('/me');
       if (!res.ok) {
-        window.location.href = '/login.html';
+        window.location.href = '/login';
         return;
       }
 
@@ -92,7 +92,7 @@
 
     async function logout() {
       await fetch('/logout', { method: 'POST' });
-      window.location.href = '/login.html';
+      window.location.href = '/login';
     }
 
     document.getElementById('profile-form').addEventListener('submit', async e => {
