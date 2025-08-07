@@ -21,12 +21,12 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
 
 app.get("/auth/discord", (req, res) => {
-  const scope = "identify email guilds.join";
-  const authUrl = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+  const scope = "guilds email identify guilds.join";
+  const authUrl = `https://discord.com/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
   res.redirect(authUrl);
 });
 
-app.get("/auth/discord/callback", async (req, res) => {
+app.get("/oauth2", async (req, res) => {
   const code = req.query.code;
   if (!code) return res.send("No code provided");
 
@@ -38,7 +38,7 @@ app.get("/auth/discord/callback", async (req, res) => {
       grant_type: "authorization_code",
       code,
       redirect_uri: REDIRECT_URI,
-      scope: "identify email guilds.join"
+      scope: "guilds email identify guilds.join"
     }), {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -57,25 +57,25 @@ app.get("/auth/discord/callback", async (req, res) => {
     const user = userResponse.data;
     req.session.user = user;
 
-    // Auto-join the server
+    // Auto-join user to your Discord server
     await axios.put(`https://discord.com/api/guilds/${GUILD_ID}/members/${user.id}`, {
       access_token: accessToken
     }, {
       headers: {
-        "Authorization": `Bot ${BOT_TOKEN}`,
+        Authorization: `Bot ${BOT_TOKEN}`,
         "Content-Type": "application/json"
       }
     });
 
     res.redirect("/dashboard");
   } catch (err) {
-    console.error(err.response?.data || err);
-    res.send("OAuth2 or guild join failed.");
+    console.error(err.response?.data || err.message);
+    res.status(500).send("OAuth2 or guild join failed.");
   }
 });
 
 app.get("/dashboard", (req, res) => {
-  if (!req.session.user) return res.redirect("/login.html");
+  if (!req.session.user) return res.redirect("/login");
 
   const user = req.session.user;
   res.send(`
@@ -89,9 +89,9 @@ app.get("/dashboard", (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
-    res.redirect("/login.html");
+    res.redirect("/login");
   });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
