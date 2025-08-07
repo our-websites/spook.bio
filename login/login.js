@@ -22,7 +22,7 @@ const GUILD_ID = process.env.GUILD_ID;
 
 app.get("/auth/discord", (req, res) => {
   const scope = "guilds email identify guilds.join";
-  const authUrl = `https://discord.com/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+  const authUrl = `https://discord.com/oauth2/authorize?client_id=1402955374117650463&response_type=code&redirect_uri=https%3A%2F%2Fspook.bio%2Fapi%2Fauth&scope=guilds+email+guilds.join+identify`;
   res.redirect(authUrl);
 });
 
