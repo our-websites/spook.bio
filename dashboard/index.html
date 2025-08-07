@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #2c2f33;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    .card {
+      background: #23272a;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 10px #000;
+    }
+    img.avatar {
+      border-radius: 50%;
+      width: 100px;
+      margin-bottom: 10px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #7289da;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.logout {
+      background: #ff5c5c;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div id="profile">
+      <img id="avatar" class="avatar" src="" alt="Avatar" />
+      <h2 id="username">Loading...</h2>
+    </div>
+
+    <form id="profile-form">
+      <div class="form-group">
+        <label for="displayName">Display Name</label>
+        <input type="text" id="displayName" name="displayName" placeholder="Enter a display name"/>
+      </div>
+      <div class="form-group">
+        <label for="email">Email (readonly)</label>
+        <input type="email" id="email" name="email" readonly />
+      </div>
+      <button type="submit">Save Changes</button>
+    </form>
+
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    async function getUser() {
+      const res = await fetch('/me');
+      if (!res.ok) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const user = await res.json();
+      document.getElementById('username').innerText = user.username + '#' + user.discriminator;
+      document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+      document.getElementById('email').value = user.email || '';
+      document.getElementById('displayName').value = user.global_name || '';
+    }
+
+    async function logout() {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login.html';
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const displayName = document.getElementById('displayName').value;
+
+      const res = await fetch('/profile', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ displayName })
+      });
+
+      if (res.ok) alert('Profile updated!');
+      else alert('Error updating profile.');
+    });
+
+    getUser();
+  </script>
+</body>
+</html>
