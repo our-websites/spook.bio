@@ -1,4 +1,49 @@
-<title>Discord Logged In!</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Authorizing...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      background: #2c2f33;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #7289da;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+  <p>Authorizing with Discord...</p>
 
-<b>Successfully logged with Discord.</b> </br>
-## Set a login cookie/token and add a redirect to /dashboard here!
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (!code) {
+      window.location.href = "https://spook.bio/login";
+    } else {
+      // Redirect to your backend to handle the code exchange
+      window.location.href = `/api/auth?code=${encodeURIComponent(code)}`;
+    }
+  </script>
+</body>
+</html>
