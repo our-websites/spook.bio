@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // GitHub PAT
 const REPO_OWNER = "spookbio";
-const REPO_NAME = "spook.bio";
+const REPO_NAME = "spookbio.github.io";
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "profile", "index.html");
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
