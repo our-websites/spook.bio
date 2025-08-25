@@ -1,4 +1,4 @@
 # Website
-https://spookbio.github.io
-## The Official spook.bio testing Website.
+https://spook.bio
+## The Official spook.bio Website.
 
