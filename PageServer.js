@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // GitHub PAT
 const REPO_OWNER = "spookbio";
-const REPO_NAME = "website";
+const REPO_NAME = "spook.bio";
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "profile", "index.html");
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
@@ -60,7 +60,7 @@ app.post("/create", async (req, res) => {
         });
 
         res.cookie("Account", username, { maxAge: 365 * 24 * 60 * 60 * 1000 });
-        res.send(`Profile created! <a href="https://spook.bio/u/${username}">View</a>`);
+        res.send(`Profile created! <a href="/u/${username}">View</a>`);
     } catch (err) {
         res.status(500).send(`Error: ${err.message}`);
     }
@@ -109,7 +109,7 @@ app.post("/edit", async (req, res) => {
             sha: fileData.sha,
         });
 
-        res.send(`Profile updated! <a href="https://spook.bio/u/${account}">View</a>`);
+        res.send(`Profile updated! <a href="/u/${account}">View</a>`);
     } catch (err) {
         res.status(500).send(`Error: ${err.message}`);
     }
