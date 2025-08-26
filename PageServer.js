@@ -114,7 +114,7 @@ app.post("/edit", async (req, res) => {
     .replace(/\$\{user.display\}/g, account) // keep display = account if not editable
     .replace(/\$\{user.description\}/g, description);
 
-  const pagePath = `u/${account}/index.html`;
+  const pagePath = `https://spookbio.github.io/u/${account}/index.html`;
 
   try {
     const { data: fileData } = await octokit.repos.getContent({
