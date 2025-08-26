@@ -6,7 +6,7 @@ import multer from "multer";
 import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import './login/login.js';
+import './api/auth/login.js';
 
 dotenv.config();
 
