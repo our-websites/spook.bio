@@ -28,7 +28,7 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
 app.get("/create", (req, res) => {
   const account = req.cookies.Account;
   if (account) {
-    return res.send(`You already have a page: <a href="/u/${account}">View</a> | <a href="/edit">Edit</a>`);
+    return res.send(`You already have a page: <a href="https://spookbio.github.io/u/${account}">View</a> | <a href="/edit">Edit</a>`);
   }
 
   res.send(`
@@ -48,7 +48,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
   const account = req.cookies.Account;
 
   if (account) {
-    return res.send(`You already have a page: <a href="/u/${account}">View</a>`);
+    return res.send(`You already have a page: <a href="https://spookbio.github.io/u/${account}">View</a>`);
   }
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
@@ -83,7 +83,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
     fs.unlinkSync(req.file.path); // cleanup temp file
 
     res.cookie("Account", username, { maxAge: 365 * 24 * 60 * 60 * 1000 });
-    res.send(`Profile created! <a href="/u/${username}">View</a>`);
+    res.send(`Profile created! <a href="https://spookbio.github.io/u/${username}">View</a>`);
   } catch (err) {
     res.status(500).send(`Error: ${err.message}`);
   }
@@ -132,7 +132,7 @@ app.post("/edit", async (req, res) => {
       sha: fileData.sha,
     });
 
-    res.send(`Profile updated! <a href="/u/${account}">View</a>`);
+    res.send(`Profile updated! <a href="https://spokbio.github.io/u/${account}">View</a>`);
   } catch (err) {
     res.status(500).send(`Error: ${err.message}`);
   }
