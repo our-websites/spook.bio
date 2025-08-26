@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>spook.bio</title>
+   <meta charset="UTF-8" />
+  <title>spook.bio | @spook.bio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="https://spook.bio/logo.png" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+
+  <!-- Added theme color and Discord embed meta tags -->
+  <meta name="theme-color" content="#c47bfe" />
+  <meta property="og:title" content="spook.bio | @spook.bio" />
+  <meta property="og:keywords" content="discord,bio,guns.lol,solo.to,description service,description,.bio,bio,biography,online bio,bio online,online description,description online,online description editor,description editor,description editor online,free,free bio,free description,free bio,free description editor,spook.bio,spook,prp.bio,spook,prp,prpl,spooky,phis,lcjunior1220,lecanact,free biograhpy">
+  <meta property="og:description" content="Spook is a free bio service similar to guns.lol or solo.to" />
+  <meta property="og:image" content="/MainLogo.png" />
+  <meta property="og:url" content="/" />
+  <meta property="og:type" content="website">
+  <meta property="og:image:alt" content="spook.bio Official Logo">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="spook.bio" />
+  <meta property="twitter:site" content="@spookbio">
+  <meta property="twitter:site:id" content="@spookbio">
+  <meta property="twitter:creator:id" content="@spookbio">
+  <meta property="twitter:creator" content="@spookbio">
+  <meta property="twitter:image" content="/banner.jpg">
+  <meta name="twitter:description" content="Spook is a free bio service similar to guns.lol or solo.to" />
+  <meta name="twitter:image" content="/pfp.jpg" />
+  <meta property="og:site_name" content="Spook">
+  <meta property="og:locale" content="en-US">
+  
   <style>
     @font-face {
       font-family: 'SpookFont';
-      src: url('https://spook.bio/abc.ttf') format('truetype');
+      src: url('/abc.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -20,8 +42,9 @@
 
     body {
       height: 100vh;
-      background: url('https://spook.bio/background.jpg') no-repeat center center fixed;
+      background: url('/background.jpg') no-repeat center center fixed;
       background-size: cover;
+      color: purple;
       font-family: Arial, sans-serif;
       user-select: none;
       overflow: hidden;
@@ -181,7 +204,7 @@
       left: 0;
       right: 0;
       height: 120px;
-      background: url('https://spook.bio/banner.jpg') center/cover no-repeat;
+      background: url('/banner.jpg') center/cover no-repeat;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
       z-index: 1;
@@ -202,7 +225,7 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: url('https://spook.bio/pfp.jpg') center/cover no-repeat;
+      background: url('/pfp.jpg') center/cover no-repeat;
       border: 3px solid #C274FE;
       flex-shrink: 0;
       margin-top: -36px;
@@ -290,7 +313,7 @@
 </head>
 <body oncontextmenu="return false;">
   <header>
-    <img src="https://spook.bio/logo.png" alt="Logo" />
+    <img src="/logo.png" alt="Logo" />
     <div class="title">spook<span class="dot">.</span>bio</div>
     <div class="menu-button" id="menuButton">
       <div class="menu-icon" id="menuIcon">
@@ -306,8 +329,8 @@
   </header>
 
   <div class="menu-dropdown" id="menuDropdown">
-    <button onclick="window.location.href='https://spook.bio'">Home</button>
-    <button onclick="window.location.href='mailto:spookbios@gmail.com'">Contact</button>
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='mailto:phis@support.spook.bio'">Contact</button>
     <button onclick="window.location.href='https://direct.me/prple'">direct.me</button>
   </div>
 
@@ -320,15 +343,15 @@
         <div class="username">@spook</div>
       </div>
     </div>
-    <div class="about-box">This is just an example preview of a profile.</div>
+    <div class="about-box">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
   </div>
 
   <footer class="footer-container">
     <div>© 2025 spook.bio</div>
-    <div>even tho this project isn't done we will be doing testing soon.</div>
+    <div>even tho this project isn't done we will be doing testing soon. Also this landing page will be rebranded soon.</div>
     <a href="https://discord.gg/Gvd4Ruv2Gf" target="_blank" rel="noopener" class="discord-button">
-      <img src="https://spook.bio/discord-logo.png" alt="Discord Logo" />
-      Join the discord
+      <img src="/DiscordLogo.ico" alt="Discord Server" />
+      Join the discord server
     </a>
   </footer>
 
@@ -355,6 +378,7 @@
         menuDropdown.style.display = 'none';
         menuIcon.style.display = 'flex';
         closeIcon.style.display = 'none';
+        frame.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
       } else {
         menuDropdown.style.display = 'flex';
         menuIcon.style.display = 'none';
