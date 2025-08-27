@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Your Profile</title>
+  <link rel="stylesheet" href="/edit.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Your Profile</h1>
+    <form id="edit-form">
+      <label>Display Name</label>
+      <input type="text" name="display" placeholder="New display name" oninput="updatePreview()" /><br/>
+
+      <label>Description</label>
+      <textarea name="description" placeholder="New description" oninput="updatePreview()"></textarea><br/>
+
+      <label>Profile Picture</label>
+      <input type="file" name="pfp" accept="image/*" onchange="previewImage(event)" /><br/>
+
+      <label>Or use image URL</label>
+      <input type="url" name="pfpURL" placeholder="https://example.com/image.jpg" oninput="previewURL(event)" /><br/>
+
+      <button type="submit">Save Changes</button>
+      <p id="status" style="margin-top: 15px;"></p>
+    </form>
+
+    <div class="preview">
+      <h2>Live Preview</h2>
+      <div class="profile-preview">
+        <img id="pfp-preview" src="/default.jpg" alt="Profile Picture" />
+        <h3 id="name-preview">Your Name</h3>
+        <p id="desc-preview">Your description here</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updatePreview() {
+      const nameInput = document.querySelector('input[name="display"]');
+      const descInput = document.querySelector('textarea[name="description"]');
+      document.getElementById('name-preview').textContent = nameInput.value || "Your Name";
+      document.getElementById('desc-preview').textContent = descInput.value || "Your description here";
+    }
+
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById('pfp-preview').src = reader.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function previewURL(event) {
+      const url = event.target.value;
+      document.getElementById('pfp-preview').src = url;
+    }
+
+    document.getElementById("edit-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const status = document.getElementById("status");
+      status.textContent = "Saving...";
+
+      try {
+        const response = await fetch("https://api.spook.bio/edit", {
+          method: "POST",
+          credentials: "include", // sends cookies!
+          body: formData
+        });
+
+        const result = await response.text();
+        status.textContent = result;
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
