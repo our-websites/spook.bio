@@ -1,11 +1,13 @@
-// login.js
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
+// Load environment variables
 dotenv.config();
 
-const router = express.Router();
+const app = express();
+app.use(cookieParser());
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -13,12 +15,18 @@ const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI; // e.g. https://spook.bio
 const GUILD_ID = process.env.DISCORD_GUILD_ID;
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-router.get("/callback", async (req, res) => {
+if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN) {
+  console.error("❌ One or more required environment variables are missing.");
+  process.exit(1);
+}
+
+const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+
+app.get("/callback", async (req, res) => {
   const code = req.query.code;
   if (!code) return res.redirect("/login");
 
   try {
-    // 1. Exchange code for access token
     const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -34,14 +42,13 @@ router.get("/callback", async (req, res) => {
     const tokenData = await tokenResponse.json();
     if (!tokenData.access_token) return res.redirect("/login");
 
-    // 2. Get user info
     const userResponse = await fetch("https://discord.com/api/users/@me", {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
     const userData = await userResponse.json();
 
-    // 3. Auto join user to Discord server
-    const joinResponse = await fetch(`https://discord.com/api/guilds/${GUILD_ID}/members/${userData.id}`, {
+    // Auto join server (optional)
+    await fetch(`https://discord.com/api/guilds/${GUILD_ID}/members/${userData.id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bot ${BOT_TOKEN}`,
@@ -52,20 +59,16 @@ router.get("/callback", async (req, res) => {
       }),
     });
 
-    if (![201, 204].includes(joinResponse.status)) {
-      console.log("Failed to add to server:", await joinResponse.text());
-      return res.redirect("/login");
-    }
+    // Set cookies for the session
+    res.cookie("Account", userData.username, { maxAge: ONE_YEAR });
+    res.cookie("DisplayName", userData.global_name || userData.username, { maxAge: ONE_YEAR });
 
-    // Set cookie with user's email for authentication
-    res.cookie("Account", userData.email, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
-
-    // Redirect to dashboard or home page
-    res.redirect("/dashboard");
+    res.redirect("/create");
   } catch (err) {
-    console.error(err);
+    console.error("OAuth Error:", err);
     res.redirect("/login");
   }
 });
 
-export default router;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ Auth server running on port ${PORT}`));
