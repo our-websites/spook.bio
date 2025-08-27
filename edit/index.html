@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Your Profile</title>
+  <link rel="stylesheet" href="/edit.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Your Profile</h1>
+
+    <form id="edit-form">
+      <label>Display Name</label>
+      <input type="text" name="display" placeholder="Display Name" /><br/>
+
+      <label>Description</label>
+      <textarea name="description" placeholder="Description"></textarea><br/>
+
+      <label>Profile Picture</label>
+      <input type="file" name="pfp" accept="image/*" /><br/>
+
+      <label>Or use image URL</label>
+      <input type="url" name="pfpURL" placeholder="https://spook.bio/pfp.jpg" /><br/>
+
+      <button type="submit">Save Changes</button>
+      <p id="status"></p>
+    </form>
+
+    <div class="preview">
+      <h2>Live Preview</h2>
+      <div class="profile-preview">
+        <img id="pfp-preview" src="/default.jpg" alt="Profile Picture" />
+        <h3 id="name-preview"></h3>
+        <p id="desc-preview"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper: get cookie
+    function getCookie(name) {
+      return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    }
+
+    const account = getCookie("Account");
+
+    // No Account? Redirect to /create
+    if (!account) {
+      window.location.href = "/create";
+    }
+
+    // Load existing data from live site
+    fetch(`https://spook.bio/u/${account}/index.html`)
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const name = doc.querySelector('[data-name]')?.textContent || account;
+        const desc = doc.querySelector('[data-description]')?.textContent || "Your description";
+        const imgSrc = doc.querySelector('[data-pfp]')?.src || "/default.jpg";
+
+        document.querySelector('input[name="display"]').value = name;
+        document.querySelector('textarea[name="description"]').value = desc;
+        document.getElementById('name-preview').textContent = name;
+        document.getElementById('desc-preview').textContent = desc;
+        document.getElementById('pfp-preview').src = imgSrc;
+      })
+      .catch(() => {
+        window.location.href = "/create";
+      });
+
+    // Update preview
+    document.querySelector('input[name="display"]').addEventListener("input", e => {
+      document.getElementById('name-preview').textContent = e.target.value;
+    });
+
+    document.querySelector('textarea[name="description"]').addEventListener("input", e => {
+      document.getElementById('desc-preview').textContent = e.target.value;
+    });
+
+    document.querySelector('input[name="pfp"]').addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.getElementById('pfp-preview').src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.querySelector('input[name="pfpURL"]').addEventListener("input", e => {
+      document.getElementById('pfp-preview').src = e.target.value;
+    });
+
+    // Submit form
+    document.getElementById('edit-form').addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+      formData.append("account", account);
+
+      const status = document.getElementById("status");
+      status.textContent = "Saving...";
+
+      try {
+        const res = await fetch("https://api.spook.bio/edit", {
+          method: "POST",
+          credentials: "include",
+          body: formData
+        });
+
+        const text = await res.text();
+        status.textContent = text;
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
