@@ -2,21 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spook.bio | @${user.name}</title>
+  <title>spook.bio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="/logo.png" />
-  <meta name="theme-color" content="#c47bfe" />
-  <meta property="og:title" content="spook.bio | @${user.name}" />
-  <meta property="og:description" content="${user.description}" />
-  <meta property="og:image" content="pfp.jpg" />
-  <meta name="twitter:title" content="spook.bio" />
-  <meta name="twitter:description" content="${user.description}" />
-  <meta name="twitter:image" content="pfp.jpg" />
-
+  <link rel="icon" type="image/png" href="https://spook.bio/logo.png" />
   <style>
     @font-face {
       font-family: 'SpookFont';
-      src: url('/abc.ttf') format('truetype');
+      src: url('https://spook.bio/abc.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -28,10 +20,9 @@
 
     body {
       height: 100vh;
-      background: url('/background.jpg') no-repeat center center fixed;
+      background: url('https://spook.bio/background.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: purple;
-      font-family: 'SpookFont', Arial, sans-serif;
+      font-family: Arial, sans-serif;
       user-select: none;
       overflow: hidden;
       position: relative;
@@ -52,6 +43,7 @@
       align-items: center;
       gap: 12px;
       padding: 10px 20px;
+      user-select: none;
       z-index: 100;
       justify-content: space-between;
     }
@@ -59,10 +51,14 @@
     header img {
       width: 40px;
       height: 40px;
+      user-drag: none;
+      user-select: none;
+      -webkit-user-drag: none;
       pointer-events: none;
     }
 
     header .title {
+      font-family: 'SpookFont', sans-serif;
       font-size: 28px;
       color: white;
       text-shadow: 0 0 8px white, 0 0 20px white;
@@ -70,7 +66,7 @@
       flex-grow: 1;
     }
 
-    header .dot {
+    header .title .dot {
       color: #C274FE;
     }
 
@@ -83,6 +79,8 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
     }
 
     .menu-icon,
@@ -95,8 +93,17 @@
       justify-content: space-between;
     }
 
-    .menu-icon div,
+    .menu-icon div {
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+
     .close-icon div {
+      position: absolute;
+      top: 6px;
+      left: 0;
+      width: 20px;
       height: 3px;
       background: white;
       border-radius: 2px;
@@ -104,14 +111,10 @@
 
     .close-icon div:first-child {
       transform: rotate(45deg);
-      position: absolute;
-      top: 6px;
     }
 
     .close-icon div:last-child {
       transform: rotate(-45deg);
-      position: absolute;
-      top: 6px;
     }
 
     .menu-dropdown {
@@ -125,23 +128,29 @@
       border: 2px solid #C274FE;
       border-radius: 20px;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 24px 20px;
       z-index: 99;
+      user-select: none;
       display: none;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
       gap: 16px;
+      min-height: 120px;
     }
 
     .menu-dropdown button {
       background: transparent;
       border: none;
       color: #C274FE;
-      font-size: 20px;
-      font-family: 'SpookFont', sans-serif;
       padding: 8px 16px;
       border-radius: 12px;
       cursor: pointer;
+      font-family: 'SpookFont', sans-serif;
+      font-size: 20px;
+      text-align: center;
+      transition: background-color 0.2s ease;
     }
 
     .menu-dropdown button:hover {
@@ -158,17 +167,24 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      overflow: hidden;
+      transform-style: preserve-3d;
       transition: transform 0.1s ease-out;
       user-select: none;
       z-index: 50;
-      overflow: hidden;
+      cursor: default;
     }
 
     .banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 120px;
-      background: url('/banner.jpg') center/cover no-repeat;
+      background: url('https://spook.bio/banner.jpg') center/cover no-repeat;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
+      z-index: 1;
     }
 
     .profile-info {
@@ -179,25 +195,33 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      z-index: 2;
     }
 
     .pfp {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: url('pfp.jpg') center/cover no-repeat;
+      background: url('https://spook.bio/pfp.jpg') center/cover no-repeat;
       border: 3px solid #C274FE;
+      flex-shrink: 0;
       margin-top: -36px;
       background-color: black;
     }
 
     .text-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       color: white;
     }
 
     .display-name {
+      font-family: 'SpookFont', sans-serif;
       font-size: 24px;
       text-shadow: 0 0 8px white, 0 0 20px white;
+      color: white;
+      white-space: nowrap;
     }
 
     .display-name .dot {
@@ -208,6 +232,7 @@
       color: gray;
       font-size: 14px;
       margin-top: 4px;
+      white-space: nowrap;
     }
 
     .about-box {
@@ -220,6 +245,7 @@
       padding: 12px;
       color: white;
       font-size: 14px;
+      z-index: 2;
     }
 
     .footer-container {
@@ -241,38 +267,47 @@
       display: inline-flex;
       align-items: center;
       background-color: #5865F2;
+      border: none;
       color: white;
       padding: 8px 16px;
       font-family: 'SpookFont', sans-serif;
       font-size: 16px;
       border-radius: 12px;
+      cursor: pointer;
       text-decoration: none;
+      user-select: none;
+      transition: background-color 0.2s ease;
     }
 
     .discord-button img {
       width: 20px;
       height: 20px;
       margin-right: 8px;
+      user-select: none;
+      pointer-events: none;
     }
   </style>
 </head>
 <body oncontextmenu="return false;">
   <header>
-    <img src="/logo.png" alt="Logo" />
+    <img src="https://spook.bio/logo.png" alt="Logo" />
     <div class="title">spook<span class="dot">.</span>bio</div>
     <div class="menu-button" id="menuButton">
       <div class="menu-icon" id="menuIcon">
-        <div></div><div></div><div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
       <div class="close-icon" id="closeIcon" style="display:none;">
-        <div></div><div></div>
+        <div></div>
+        <div></div>
       </div>
     </div>
   </header>
 
   <div class="menu-dropdown" id="menuDropdown">
-    <button onclick="window.location.href='/'">Home</button>
-    <button onclick="window.location.href='mailto:phis@support.spook.bio'">Contact</button>
+    <button onclick="window.location.href='https://spook.bio'">Home</button>
+    <button onclick="window.location.href='mailto:spookbios@gmail.com'">Contact</button>
     <button onclick="window.location.href='https://direct.me/prple'">direct.me</button>
   </div>
 
@@ -281,19 +316,19 @@
     <div class="profile-info">
       <div class="pfp"></div>
       <div class="text-container">
-        <div class="display-name">${user.display}</div>
-        <div class="username">@${user.name}</div>
+        <div class="display-name">spook<span class="dot">.</span>bio</div>
+        <div class="username">@spook</div>
       </div>
     </div>
-    <div class="about-box">${user.description}</div>
+    <div class="about-box">This is just an example preview of a profile.</div>
   </div>
 
   <footer class="footer-container">
     <div>© 2025 spook.bio</div>
-    <div>even tho this project isn't done we will be doing testing soon. Also this landing page will be rebranded soon.</div>
+    <div>even tho this project isn't done we will be doing testing soon.</div>
     <a href="https://discord.gg/Gvd4Ruv2Gf" target="_blank" rel="noopener" class="discord-button">
-      <img src="/DiscordLogo.ico" alt="Discord Server" />
-      Join the discord server
+      <img src="https://spook.bio/discord-logo.png" alt="Discord Logo" />
+      Join the discord
     </a>
   </footer>
 
@@ -310,17 +345,21 @@
     frame.addEventListener('mouseleave', () => {
       frame.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
     });
-
     const menuButton = document.getElementById('menuButton');
     const menuIcon = document.getElementById('menuIcon');
     const closeIcon = document.getElementById('closeIcon');
     const menuDropdown = document.getElementById('menuDropdown');
-
     menuButton.addEventListener('click', () => {
       const isOpen = menuDropdown.style.display === 'flex';
-      menuDropdown.style.display = isOpen ? 'none' : 'flex';
-      menuIcon.style.display = isOpen ? 'flex' : 'none';
-      closeIcon.style.display = isOpen ? 'none' : 'flex';
+      if (isOpen) {
+        menuDropdown.style.display = 'none';
+        menuIcon.style.display = 'flex';
+        closeIcon.style.display = 'none';
+      } else {
+        menuDropdown.style.display = 'flex';
+        menuIcon.style.display = 'none';
+        closeIcon.style.display = 'flex';
+      }
     });
   </script>
 </body>
