@@ -7,7 +7,7 @@ import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
-node '/api/auth/login.js'
+node /api/auth/login.js
 
 dotenv.config();
 
