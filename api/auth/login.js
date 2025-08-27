@@ -1,22 +1,24 @@
+// login.js
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
-const app = express();
+
+const router = express.Router();
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI; // e.g. https://spook.bio/callback
-const GUILD_ID = process.env.DISCORD_GUILD_ID; // Your server ID
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN; // Bot must have "Guilds" & "Guild Members" intents + "Add Members" permission
+const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI; // e.g. https://spook.bio/api/auth/callback
+const GUILD_ID = process.env.DISCORD_GUILD_ID;
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-app.get("/callback", async (req, res) => {
+router.get("/callback", async (req, res) => {
     const code = req.query.code;
     if (!code) return res.redirect("/login");
 
     try {
-        // 1. Exchange code for access token
+        // Exchange code for access token
         const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -32,13 +34,13 @@ app.get("/callback", async (req, res) => {
         const tokenData = await tokenResponse.json();
         if (!tokenData.access_token) return res.redirect("/login");
 
-        // 2. Get user info
+        // Get user info
         const userResponse = await fetch("https://discord.com/api/users/@me", {
             headers: { Authorization: `Bearer ${tokenData.access_token}` },
         });
         const userData = await userResponse.json();
 
-        // 3. Auto join user to Discord server
+        // Auto join user to Discord server
         const joinResponse = await fetch(`https://discord.com/api/guilds/${GUILD_ID}/members/${userData.id}`, {
             method: "PUT",
             headers: {
@@ -50,12 +52,15 @@ app.get("/callback", async (req, res) => {
             }),
         });
 
-        if (joinResponse.status !== 201 && joinResponse.status !== 204) {
+        if (![201, 204].includes(joinResponse.status)) {
             console.log("Failed to add to server:", await joinResponse.text());
             return res.redirect("/login");
         }
 
-        // 4. Redirect to dashboard
+        // Here you can set cookie for logged in user, for example:
+        res.cookie("Account", userData.email, { maxAge: 365 * 24 * 60 * 60 * 1000 });
+
+        // Redirect to dashboard or wherever
         res.redirect("/dashboard");
 
     } catch (err) {
@@ -64,4 +69,4 @@ app.get("/callback", async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+export default router;
