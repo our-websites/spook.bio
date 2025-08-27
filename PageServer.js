@@ -6,8 +6,9 @@ import multer from "multer";
 import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import login from './api/auth/login.js';
-login()
+
+node '/api/auth/login.js'
+
 dotenv.config();
 
 const app = express();
