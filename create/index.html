@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Your Page</title>
+  <link rel="stylesheet" href="create.css" />
+</head>
+<body>
+  <form method="POST" action="https://api.spook.bio/create" enctype="multipart/form-data">
+    <h2>Create Your Profile</h2>
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="text" name="display" placeholder="Display Name" required />
+    <input type="text" name="description" placeholder="Description" required />
+    <input type="file" name="pfp" accept="image/*" required />
+    <button type="submit">Create Page</button>
+    <div class="note">Note: Your profile picture should be 3464 × 3464 or smaller.</div>
+  </form>
+</body>
+</html>
