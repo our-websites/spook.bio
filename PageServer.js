@@ -6,8 +6,8 @@ import multer from "multer";
 import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import './api/auth/login.js';
-
+import login from './api/auth/login.js';
+login()
 dotenv.config();
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.static("public")); // serve static assets (optional)
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const REPO_OWNER = "spookbio";
-const REPO_NAME = "spookbio.github.io";
+const REPO_NAME = "spook.bio";
 const TEMPLATE_PATH = path.join(process.cwd(), "templates", "profile", "index.html");
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
@@ -28,7 +28,7 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
 app.get("/create", (req, res) => {
   const account = req.cookies.Account;
   if (account) {
-    return res.send(`You already have a page: <a href="https://spookbio.github.io/u/${account}">View</a> | <a href="/edit">Edit</a>`);
+    return res.send(`You already have a page: <a href="https://spook.bio/u/${account}">View</a> | <a href="/edit">Edit</a>`);
   }
 
   res.send(`
@@ -48,7 +48,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
   const account = req.cookies.Account;
 
   if (account) {
-    return res.send(`You already have a page: <a href="https://spookbio.github.io/u/${account}">View</a>`);
+    return res.send(`You already have a page: <a href="https://spook.bio/u/${account}">View</a>`);
   }
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
@@ -83,7 +83,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
     fs.unlinkSync(req.file.path); // cleanup temp file
 
     res.cookie("Account", username, { maxAge: 365 * 24 * 60 * 60 * 1000 });
-    res.send(`Profile created! <a href="https://spookbio.github.io/u/${username}">View</a>`);
+    res.send(`Profile created! <a href="https://spook.bio/u/${username}">View</a>`);
   } catch (err) {
     res.status(500).send(`Error: ${err.message}`);
   }
@@ -114,7 +114,7 @@ app.post("/edit", async (req, res) => {
     .replace(/\$\{user.display\}/g, account) // keep display = account if not editable
     .replace(/\$\{user.description\}/g, description);
 
-  const pagePath = `https://spookbio.github.io/u/${account}/index.html`;
+  const pagePath = `https://spook.bio/u/${account}/index.html`;
 
   try {
     const { data: fileData } = await octokit.repos.getContent({
@@ -132,7 +132,7 @@ app.post("/edit", async (req, res) => {
       sha: fileData.sha,
     });
 
-    res.send(`Profile updated! <a href="https://spokbio.github.io/u/${account}">View</a>`);
+    res.send(`Profile updated! <a href="https://spok.bio/u/${account}">View</a>`);
   } catch (err) {
     res.status(500).send(`Error: ${err.message}`);
   }
