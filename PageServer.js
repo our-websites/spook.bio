@@ -8,7 +8,7 @@ import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
-import loginRouter from "/api/auth/login.js"; // Adjust this path if your login.js is located somewhere else
+import loginRouter from './api/auth/login.js';
 
 dotenv.config();
 
