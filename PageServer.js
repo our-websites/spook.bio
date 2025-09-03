@@ -7,12 +7,86 @@ import multer from "multer";
 import { Octokit } from "@octokit/rest";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import fetch from "node-fetch"
 
-import loginRouter from './api/auth/login.js';
+// import loginRouter from './api/auth/login.js';
 
+// Login System
+
+// Load environment variables
 dotenv.config();
 
 const app = express();
+app.use(cookieParser());
+
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI; // e.g. https://spook.bio/api/auth/callback
+const GUILD_ID = process.env.DISCORD_GUILD_ID;
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+
+if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN) {
+  console.error("❌ One or more required environment variables are missing.");
+//  process.exit(1);
+}
+
+const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+
+app.get("/callback", async (req, res) => {
+  const code = req.query.code;
+  if (!code) return res.redirect("/login");
+
+  try {
+    const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: REDIRECT_URI,
+      }),
+    });
+
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) return res.redirect("/login");
+
+    const userResponse = await fetch("https://discord.com/api/users/@me", {
+      headers: { Authorization: `Bearer ${tokenData.access_token}` },
+    });
+    const userData = await userResponse.json();
+
+    // Auto join server (optional)
+    await fetch(`https://discord.com/api/guilds/${GUILD_ID}/members/${userData.id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bot ${BOT_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        access_token: tokenData.access_token,
+      }),
+    });
+
+    // Set cookies for the session
+    res.cookie("Account", userData.username, { maxAge: ONE_YEAR });
+    res.cookie("DisplayName", userData.global_name || userData.username, { maxAge: ONE_YEAR });
+
+    res.redirect("/create");
+  } catch (err) {
+    console.error("OAuth Error:", err);
+    res.redirect("/login");
+  }
+});
+
+const PORT2 = process.env.PORT || 5000;
+app.listen(PORT2, () => console.log(`✅ Auth server running on port ${PORT2}`));
+
+
+// end of Login System
+dotenv.config();
+
 const upload = multer({ dest: "uploads/" });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,7 +101,7 @@ const TEMPLATE_PATH = path.join(process.cwd(), "templates", "profile", "index.ht
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 // Mount the login router under /api/auth
-app.use("/api/auth", loginRouter);
+// app.use("/api/auth", loginRouter); (NOT A FUNCTION OR MODULE.)
 
 // Show create page
 app.get("/create", (req, res) => {
