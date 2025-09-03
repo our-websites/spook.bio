@@ -80,8 +80,8 @@ app.get("/callback", async (req, res) => {
   }
 });
 
-const PORT2 = process.env.PORT || 5000;
-app.listen(PORT2, () => console.log(`✅ Auth server running on port ${PORT2}`));
+// const PORT2 = process.env.PORT || 5000;
+// app.listen(PORT2, () => console.log(`✅ Auth server running on port ${PORT2}`));
 
 
 // end of Login System
