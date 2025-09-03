@@ -26,7 +26,7 @@ const GUILD_ID = process.env.DISCORD_GUILD_ID;
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
-if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN || !WEBHOOK_URL ||) {
+if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN || !WEBHOOK_URL) {
   console.error("❌ One or more required environment variables are missing.");
   //  process.exit(1);
 }
