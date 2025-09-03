@@ -19,9 +19,9 @@ dotenv.config();
 const app = express();
 app.use(cookieParser());
 
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const CLIENT_ID = "1402955374117650463";
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = process.env.DISCORD_REDIRECT_URI; // e.g. https://spook.bio/api/auth/callback
+const REDIRECT_URI = "api.spook.bio/callback"; // e.g. https://spook.bio/api/auth/callback
 const GUILD_ID = process.env.DISCORD_GUILD_ID;
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
@@ -85,6 +85,7 @@ app.get("/callback", async (req, res) => {
 
 
 // end of Login System
+
 dotenv.config();
 
 const upload = multer({ dest: "uploads/" });
@@ -230,7 +231,7 @@ app.get("/dashboard", (req, res) => {
 // Login page route placeholder
 app.get("/login", (req, res) => {
   // This should link to your Discord OAuth URL to start login flow
-  const discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20guilds.join`;
+  const discordLoginUrl = `https://discord.com/oauth2/authorize?client_id=1402955374117650463&response_type=code&redirect_uri=https%3A%2F%2Fspook.bio%2Fapi%2Fauth&scope=guilds+email+guilds.join+identify`;
   res.send(`<a href="${discordLoginUrl}">Login with Discord</a>`);
 });
 
