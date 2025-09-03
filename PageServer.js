@@ -19,16 +19,15 @@ dotenv.config();
 const app = express();
 app.use(cookieParser());
 
-const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID = "1402955374117650463";
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI; // e.g. https://spook.bio/api/auth/callback
+const REDIRECT_URI = "api.spook.bio/callback"; // e.g. https://spook.bio/api/auth/callback
 const GUILD_ID = process.env.DISCORD_GUILD_ID;
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
-if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN || !WEBHOOK_URL) {
+if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN) {
   console.error("❌ One or more required environment variables are missing.");
-  //  process.exit(1);
+//  process.exit(1);
 }
 
 const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
@@ -87,34 +86,6 @@ app.get("/callback", async (req, res) => {
 
 // end of Login System
 
-async function sendMessageToDiscord(messageContent) {
-  try {
-    const response = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        // content: messageContent,
-        avatar_url: 'https://spook.bio/MainLogo.png',
-        embeds: [{
-          title: 'New Profile Created!',
-          description: messageContent,
-          color: C274FE // spook.bio color
-        }]
-      }),
-    });
-
-    if (response.ok) {
-      console.log('Message sent successfully!');
-    } else {
-      console.error('Failed to send message:', response.status, response.statusText);
-    }
-  } catch (error) {
-    console.error('Error sending message:', error);
-  }
-}
-
 dotenv.config();
 
 const upload = multer({ dest: "uploads/" });
@@ -137,7 +108,7 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
 app.get("/create", (req, res) => {
   const account = req.cookies.Account;
   if (account) {
-    return res.send(`You already have a page: <a href="https://prp.bio/u/${account}">View</a> | <a href="/edit">Edit</a>`);
+    return res.send(`You already have a page: <a href="https://spook.bio/u/${account}">View</a> | <a href="/edit">Edit</a>`);
   }
 
   res.send(`
@@ -157,7 +128,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
   const account = req.cookies.Account;
 
   if (account) {
-    return res.send(`You already have a page: <a href="https://prp.bio/u/${account}">View</a>`);
+    return res.send(`You already have a page: <a href="https://spook.bio/u/${account}">View</a>`);
   }
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
@@ -192,9 +163,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
     fs.unlinkSync(req.file.path); // cleanup temp file
 
     res.cookie("Account", username, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
-    res.send(`Profile created! <a href="https://prp.bio/u/${username}">View</a> (if your profile returns 404 please wait for the server to cache your profile!)`);
-    console.log(`New Profile Created`);
-    sendMessageToDiscord(`New Profile Created For ${username}! [Profile](https://prp.bio/${username})`);
+    res.send(`Profile created! <a href="https://spook.bio/u/${username}">View</a>`);
   } catch (err) {
     res.status(500).send(`Error: ${err.message}`);
   }
@@ -203,13 +172,12 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
 // Edit description
 app.get("/edit", (req, res) => {
   const account = req.cookies.Account;
-  if (!account) return res.send("You don't have a profile yet.");
+  if (!account) return res.send("You don’t have a profile yet.");
 
   res.send(`
-    < form method = "POST" action = "/edit" >
-    <input name="description" placeholder="${display}" required><br />
-    <input name="description" placeholder="${description}" required><br />
-      <button>Save Changes</button>
+    <form method="POST" action="/edit">
+        <input name="description" placeholder="New description" required><br/>
+        <button>Save Changes</button>
     </form>
   `);
 });
@@ -222,11 +190,11 @@ app.post("/edit", async (req, res) => {
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
   const html = template
-    // .replace(/\$\{user.name\}/g, username) // Changing Usernames shouldn't be possible!!
-    .replace(/\$\{user.display\}/g, display) // (IGNORE) keep display same as account for now
+    .replace(/\$\{user.name\}/g, account)
+    .replace(/\$\{user.display\}/g, account) // keep display same as account for now
     .replace(/\$\{user.description\}/g, description);
 
-  const pagePath = `u / ${account} / index.html`;
+  const pagePath = `u/${account}/index.html`;
 
   try {
     // Get current file's SHA to update it
@@ -245,11 +213,9 @@ app.post("/edit", async (req, res) => {
       sha: fileData.sha,
     });
 
-    res.send(`Profile updated! < a href = "https://prp.bio/u/${account}" > View</a > `);
-    console.log(`${account} was updated!`)
-    sendMessageToDiscord(`${account} was updated! [Profile](https://prp.bio/${username})`);
+    res.send(`Profile updated! <a href="https://spook.bio/u/${account}">View</a>`);
   } catch (err) {
-    res.status(500).send(`Error: ${err.message} `);
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
@@ -259,13 +225,13 @@ app.get("/dashboard", (req, res) => {
   if (!account) {
     return res.redirect("/login");
   }
-  res.send(`Welcome to your dashboard, ${account} ! <a href="/edit">Edit Profile</a>`);
+  res.send(`Welcome to your dashboard, ${account}! <a href="/edit">Edit Profile</a>`);
 });
 
 // Login page route placeholder
 app.get("/login", (req, res) => {
   // This should link to your Discord OAuth URL to start login flow
-  const discordLoginUrl = `https://discord.com/oauth2/authorize?client_id=1402955374117650463&response_type=code&redirect_uri=https%3A%2F%2Fapi.spook.bio%2Fcallback&scope=guilds+email+guilds.join+identify`;
+  const discordLoginUrl = `https://discord.com/oauth2/authorize?client_id=1402955374117650463&response_type=code&redirect_uri=https%3A%2F%2Fspook.bio%2Fapi%2Fauth&scope=guilds+email+guilds.join+identify`;
   res.send(`<a href="${discordLoginUrl}">Login with Discord</a>`);
 });
 
