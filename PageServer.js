@@ -34,6 +34,10 @@ if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN || 
 
 const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
 
+app.get("/", async (req, res) => {
+  res.redirect("https://spook.bio")
+}
+
 app.get("/callback", async (req, res) => {
   const code = req.query.code;
   if (!code) return res.redirect("/login");
@@ -158,7 +162,7 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
   const account = req.cookies.Account;
 
   if (account) {
-    return res.send(`You already have a page: <a href="https://prp.bio/u/${account}">View</a>`);
+    return res.send(`You already have a page: <a href="https://prp.bio/u/${account}">View</a> <a href="https://api.spook.bio/create">Edit</a>`);
   }
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
@@ -224,7 +228,7 @@ app.post("/edit", async (req, res) => {
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
   const html = template
    // .replace(/\$\{user.name\}/g, account)
-    .replace(/\$\{user.display\}/g, display) // keep display same as account for now
+    .replace(/\$\{user.display\}/g, display) // keep display same for now
     .replace(/\$\{user.description\}/g, description);
 
   const pagePath = `u/${account}/index.html`;
