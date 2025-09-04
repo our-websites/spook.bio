@@ -36,7 +36,7 @@ const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
 
 app.get("/", async (req, res) => {
   res.redirect("https://spook.bio")
-}
+});
 
 app.get("/callback", async (req, res) => {
   const code = req.query.code;
