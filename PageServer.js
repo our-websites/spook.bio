@@ -210,11 +210,11 @@ app.get("/edit", (req, res) => {
   const account = req.cookies.Account;
   if (!account) return res.send("You don't have a profile yet.");
 
-  res.send(`
+   res.send(`
     <form method="POST" action="/edit" enctype="multipart/form-data">
         <input name="display" placeholder="Display Name" required><br/>
         <input name="description" placeholder="Description" required><br/>
-        <button>Save Changes</button>
+        <button>Update Profile</button>
     </form>
   `);
 });
