@@ -207,7 +207,7 @@ app.get("/edit", (req, res) => {
   if (!account) return res.send("You don't have a profile yet.");
 
   res.send(`
-    <form method="POST" action="/create" enctype="multipart/form-data">
+    <form method="POST" action="/edit" enctype="multipart/form-data">
         <input name="display" placeholder="Display Name" required><br/>
         <input name="description" placeholder="Description" required><br/>
         <button>Save Changes</button>
