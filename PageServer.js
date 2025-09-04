@@ -20,16 +20,16 @@ const app = express();
 app.use(cookieParser());
 
 const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI; // e.g. https://spook.bio/api/auth/callback
-const GUILD_ID = process.env.DISCORD_GUILD_ID;
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+const GUILD_ID = process.env.GUILD_ID;
+const BOT_TOKEN = process.env.BOT_TOKEN;
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID || !BOT_TOKEN || !WEBHOOK_URL) {
   console.log(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, GUILD_ID, BOT_TOKEN, WEBHOOK_URL)
   console.error("❌ One or more required environment variables are missing.");
-  //  process.exit(1);
+  process.exit(1);
 }
 
 const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
