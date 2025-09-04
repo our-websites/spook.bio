@@ -207,8 +207,8 @@ app.get("/edit", (req, res) => {
 
   res.send(`
     < form method = "POST" action = "/edit" >
-    <input name="description" placeholder="${display}" required><br />
-    <input name="description" placeholder="${description}" required><br />
+    <input name="description" placeholder="Display Name" required><br />
+    <input name="description" placeholder="Description" required><br />
       <button>Save Changes</button>
     </form>
   `);
