@@ -207,7 +207,7 @@ app.get("/edit", (req, res) => {
 
   res.send(`
     < form method = "POST" action = "/edit" >
-    <input name="description" placeholder="Display Name" required><br />
+    <input name="display" placeholder="Display Name" required><br />
     <input name="description" placeholder="Description" required><br />
       <button>Save Changes</button>
     </form>
@@ -218,7 +218,7 @@ app.post("/edit", async (req, res) => {
   const account = req.cookies.Account;
   if (!account) return res.send("No account found.");
 
-  const { description } = req.body;
+  const { display, description } = req.body;
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
   const html = template
@@ -259,7 +259,7 @@ app.get("/dashboard", (req, res) => {
   if (!account) {
     return res.redirect("/login");
   }
-  res.send(`Welcome to your dashboard, ${account} ! <a href="/edit">Edit Profile</a>`);
+  res.send(`Welcome to your dashboard, ${account}! <a href="/edit">Edit Profile</a>`);
 });
 
 // Login page route placeholder
