@@ -208,7 +208,7 @@ app.get("/edit", (req, res) => {
 
   res.send(`
     <form method="POST" action="/create" enctype="multipart/form-data">
-        <input name="display" placeholder="DisplayName" required><br/>
+        <input name="display" placeholder="Display Name" required><br/>
         <input name="description" placeholder="Description" required><br/>
         <button>Save Changes</button>
     </form>
