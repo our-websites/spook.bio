@@ -207,10 +207,10 @@ app.get("/edit", (req, res) => {
   if (!account) return res.send("You don't have a profile yet.");
 
   res.send(`
-    < form method = "POST" action = "/edit" >
-    <input name="display" placeholder="Display Name" required><br />
-    <input name="description" placeholder="Description" required><br />
-      <button>Save Changes</button>
+    <form method="POST" action="/create" enctype="multipart/form-data">
+        <input name="display" placeholder="DisplayName" required><br/>
+        <input name="description" placeholder="Description" required><br/>
+        <button>Save Changes</button>
     </form>
   `);
 });
@@ -223,11 +223,11 @@ app.post("/edit", async (req, res) => {
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf8");
   const html = template
-    // .replace(/\$\{user.name\}/g, username) // Changing Usernames shouldn't be possible!!
-    .replace(/\$\{user.display\}/g, display) // (IGNORE) keep display same as account for now
+   // .replace(/\$\{user.name\}/g, account)
+    .replace(/\$\{user.display\}/g, display) // keep display same as account for now
     .replace(/\$\{user.description\}/g, description);
 
-  const pagePath = `u / ${account} / index.html`;
+  const pagePath = `u/${account}/index.html`;
 
   try {
     // Get current file's SHA to update it
@@ -246,11 +246,9 @@ app.post("/edit", async (req, res) => {
       sha: fileData.sha,
     });
 
-    res.send(`Profile updated! < a href = "https://prp.bio/u/${account}" > View</a > `);
-    console.log(`${account} was updated!`)
-    sendMessageToDiscord(`${account} was updated! [Profile](https://prp.bio/${username})`);
+    res.send(`Profile updated! <a href="https://spook.bio/u/${account}">View</a>`);
   } catch (err) {
-    res.status(500).send(`Error: ${err.message} `);
+    res.status(500).send(`Error: ${err.message}`);
   }
 });
 
