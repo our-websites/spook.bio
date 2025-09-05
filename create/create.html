@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Your Profile</title>
+  <link rel="stylesheet" href="/create.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Create Your Profile</h1>
+
+    <form method="POST" action="https://api.spook.bio/create" enctype="multipart/form-data">
+      <label>Username</label>
+      <input id="username" name="username" placeholder="Username" required><br/>
+
+      <label>Display Name</label>
+      <input id="display" name="display" placeholder="Display Name" required><br/>
+
+      <label>Description</label>
+      <textarea name="description" placeholder="Tell us about yourself" required></textarea><br/>
+
+      <label>Profile Picture (Upload or URL)</label>
+      <input type="file" name="pfp" accept="image/*"><br/>
+      <input type="url" name="pfpURL" placeholder="https://spook.bio/MainLogo.png"><br/>
+
+      <button type="submit">Create Page</button>
+    </form>
+  </div>
+
+  <script>
+    // Get a cookie by name
+    function getCookie(name) {
+      return document.cookie
+        .split("; ")
+        .find(row => row.startsWith(name + "="))
+        ?.split("=")[1];
+    }
+
+    const account = getCookie("Account");
+    const displayName = getCookie("DisplayName"); // Optional: set this from Discord if you're saving it
+
+    // Redirect if not logged in
+    if (!account) {
+      window.location.href = "/login";
+    }
+
+    // Auto-fill fields
+    document.getElementById("username").value = account || "";
+    document.getElementById("display").value = displayName || account || "";
+  </script>
+</body>
+</html>
