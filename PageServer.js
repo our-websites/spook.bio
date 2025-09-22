@@ -105,7 +105,7 @@ async function sendMessageToDiscord(messageContent) {
         embeds: [{
           title: 'New Profile Created!',
           description: messageContent,
-          color: #C274FE // spook.bio color
+          color: C274FE // spook.bio color
         }]
       }),
     });
