@@ -105,7 +105,7 @@ async function sendMessageToDiscord(messageContent) {
         embeds: [{
           title: 'New Profile Created!',
           description: messageContent,
-          color: C274FE // spook.bio color
+          color: #C274FE // spook.bio color
         }]
       }),
     });
@@ -147,6 +147,31 @@ app.get("/create", (req, res) => {
 
   res.send(`
     <form method="POST" action="/create" enctype="multipart/form-data">
+        // generate font options from the fonts in the fonts folder
+        <select name="fonts" optional>
+          <option value="abc.ttf">Spook Font</option>
+          <option value="Fondamento-Regular.ttf">Fondamento</option>
+          <option value="PressStart2P-Regular.ttf">Press Start 2P</option>
+          <option value="AmaticSC-Regular.ttf">AmaticSc</option>
+          <option value="IndieFlower-Regular.ttf">Indie Flower</option>
+          <option value="Roboto-Regular.ttf">Roboto</option>
+          <option value="Arial.ttf">Arial</option>
+          <option value="SourceSansPro-Regular.ttf">Source Sans Pro</option>
+          <option value="Bangers-Regular.ttf">Bangers</option>
+          <option value="GrenzeGotisch-Regular.ttf">Grenze Gotisch</option>
+          <option value="FredokaOne-Regular.ttf">Fredoka One</option>
+          <option value="Creepster-Regular.ttf">Creepster</option>
+          <option value="LuckiestGuy-Regular.ttf">Luckiest Guy</option>
+          <option value="ComicNeue-Angular-Regular.ttf">Comic Neue</option>
+          <option value="RomanAntique.ttf">Roman Antique</option>
+          <option value="DenkOne-Regular.ttf">Denk One</option>
+          <option value="Kalam-Regular.ttf">Kalam</option>
+          <option value="PermanentMarker.ttf">Permanent Marker</option>
+          <option value="Merriweather-Regular.ttf">Merriweather</option>
+          <option value="SpecialElite.ttf">Special Elite</option>
+          <option value="PatrickHand-Regular.ttf">Patrick Hand</option>
+          <!-- Add more fonts as needed -->
+        </select><br/>
         <input name="username" placeholder="Username" required><br/>
         <input name="display" placeholder="Display Name" required><br/>
         <input name="description" placeholder="Description" required><br/>
@@ -169,10 +194,37 @@ app.post("/create", upload.single("pfp"), async (req, res) => {
   const html = template
     .replace(/\$\{user.name\}/g, username)
     .replace(/\$\{user.display\}/g, display)
-    .replace(/\$\{user.description\}/g, description);
+    .replace(/\$\{user.description\}/g, description)
+    .replace(/\$\{user.font\}/g, req.body.font || "abc.ttf");
 
   const pagePath = `u/${username}/index.html`;
   const pfpPath = `u/${username}/pfp.jpg`;
+
+  // Make sure username is alphanumeric and dashes/underscores only
+  if (!/^[a-zA-Z0-9-_]+$/.test(username)) {
+    return res.send("Username can only contain letters, numbers, dashes, and underscores.");
+  }
+  
+// Check if profile already exists
+  try {
+    await octokit.repos.getContent({
+      owner: REPO_OWNER,
+      repo: REPO_NAME,
+      path: pagePath,
+    });
+    return res.send("Username already taken. Please choose another.");
+  }
+  catch (err) {
+    if (err.status !== 404) {
+      return res.status(500).send(`Error checking username: ${err.message}`);
+    }
+    // If 404, it means the file doesn't exist, so we can proceed
+  }
+  
+  // Validate file upload
+  if (!req.file) {
+    return res.send("Profile picture is required.");
+  }
 
   try {
     // Upload HTML file

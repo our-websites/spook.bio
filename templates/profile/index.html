@@ -9,14 +9,14 @@
   <meta property="og:title" content="@${user.name} | spook.bio" />
   <meta property="og:description" content="${user.description}" />
   <meta property="og:image" content="/u/${user.name}/pfp.jpg" />
-  <meta name="twitter:title" content="spook.bio" />
+  <meta name="twitter:title" content="prp.bio/${user.name}" />
   <meta name="twitter:description" content="${user.description}" />
   <meta name="twitter:image" content="/u/${user.name}/pfp.jpg" />
 
   <style>
     @font-face {
       font-family: 'SpookFont';
-      src: url('/abc.ttf') format('truetype');
+      src: url('/fonts/${user.font}') format('truetype');
       font-display: swap;
     }
 
