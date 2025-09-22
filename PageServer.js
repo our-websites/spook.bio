@@ -147,7 +147,6 @@ app.get("/create", (req, res) => {
 
   res.send(`
     <form method="POST" action="/create" enctype="multipart/form-data">
-        // generate font options from the fonts in the fonts folder
         <select name="fonts" optional>
           <option value="abc.ttf">Spook Font</option>
           <option value="Fondamento-Regular.ttf">Fondamento</option>
