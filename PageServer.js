@@ -150,6 +150,7 @@ app.get("/create", (req, res) => {
         <select name="fonts" optional>
           <option value="abc.ttf">Spook Font</option>
           <option value="Fondamento-Regular.ttf">Fondamento</option>
+          <option value="ComicSans.ttf">Comic Sans</option>
           <option value="PressStart2P-Regular.ttf">Press Start 2P</option>
           <option value="AmaticSC-Regular.ttf">AmaticSc</option>
           <option value="IndieFlower-Regular.ttf">Indie Flower</option>
@@ -169,7 +170,7 @@ app.get("/create", (req, res) => {
           <option value="Merriweather-Regular.ttf">Merriweather</option>
           <option value="SpecialElite.ttf">Special Elite</option>
           <option value="PatrickHand-Regular.ttf">Patrick Hand</option>
-          <!-- Add more fonts as needed -->
+          <!-- Add more fonts above this comment -->
         </select><br/>
         <input name="username" placeholder="Username" required><br/>
         <input name="display" placeholder="Display Name" required><br/>
