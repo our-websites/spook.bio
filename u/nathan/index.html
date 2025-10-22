@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>@nathan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/u/nathan/pfp.jpg" />
+  <meta name="theme-color" content="#c47bfe" />
+  <meta property="og:title" content="@nathan | spook.bio" />
+  <meta property="og:description" content="hello" />
+  <meta property="og:image" content="/u/nathan/pfp.jpg" />
+  <meta name="twitter:title" content="prp.bio/nathan" />
+  <meta name="twitter:description" content="hello" />
+  <meta name="twitter:image" content="/u/nathan/pfp.jpg" />
+
+  <style>
+    @font-face {
+      font-family: 'SpookFont';
+      src: url('/fonts/abc.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: url('/background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: purple;
+      font-family: 'SpookFont', Arial, sans-serif;
+      user-select: none;
+      overflow: hidden;
+      position: relative;
+      text-align: left;
+    }
+
+    header {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      border: 2px solid #C274FE;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      z-index: 100;
+      justify-content: space-between;
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+      pointer-events: none;
+    }
+
+    header .title {
+      font-size: 28px;
+      color: white;
+      text-shadow: 0 0 8px white, 0 0 20px white;
+      white-space: nowrap;
+      flex-grow: 1;
+    }
+
+    header .dot {
+      color: #C274FE;
+    }
+
+    .menu-button {
+      width: 40px;
+      height: 40px;
+      background: black;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .menu-icon,
+    .close-icon {
+      width: 20px;
+      height: 14px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .menu-icon div,
+    .close-icon div {
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+
+    .close-icon div:first-child {
+      transform: rotate(45deg);
+      position: absolute;
+      top: 6px;
+    }
+
+    .close-icon div:last-child {
+      transform: rotate(-45deg);
+      position: absolute;
+      top: 6px;
+    }
+
+    .menu-dropdown {
+      position: fixed;
+      top: 90px;
+      left: 20px;
+      right: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid #C274FE;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      padding: 24px 20px;
+      z-index: 99;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .menu-dropdown button {
+      background: transparent;
+      border: none;
+      color: #C274FE;
+      font-size: 20px;
+      font-family: 'SpookFont', sans-serif;
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .menu-dropdown button:hover {
+      background-color: rgba(194, 116, 254, 0.2);
+    }
+
+    .profile-frame {
+      width: 90%;
+      max-width: 400px;
+      height: 360px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease-out;
+      user-select: none;
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    .banner {
+      height: 120px;
+      background: url('/banner.jpg') center/cover no-repeat;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .profile-info {
+      position: absolute;
+      top: 120px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pfp {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: url('pfp.jpg') center/cover no-repeat;
+      border: 3px solid #C274FE;
+      margin-top: -36px;
+      background-color: black;
+    }
+
+    .text-container {
+      color: white;
+    }
+
+    .display-name {
+      font-size: 24px;
+      text-shadow: 0 0 8px white, 0 0 20px white;
+    }
+
+    .display-name .dot {
+      color: #C274FE;
+    }
+
+    .username {
+      color: gray;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .about-box {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .footer-container {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      font-size: 13px;
+      font-family: sans-serif;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .discord-button {
+      margin-top: 8px;
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      background-color: #5865F2;
+      color: white;
+      padding: 8px 16px;
+      font-family: 'SpookFont', sans-serif;
+      font-size: 16px;
+      border-radius: 12px;
+      text-decoration: none;
+    }
+
+    .discord-button img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <header>
+    <img src="/logo.png" alt="Logo" />
+    <div class="title">spook<span class="dot">.</span>bio</div>
+    <div class="menu-button" id="menuButton">
+      <div class="menu-icon" id="menuIcon">
+        <div></div><div></div><div></div>
+      </div>
+      <div class="close-icon" id="closeIcon" style="display:none;">
+        <div></div><div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu-dropdown" id="menuDropdown">
+    <button onclick="window.location.href='/'">Home</button>
+    <button onclick="window.location.href='mailto:phis@support.spook.bio'">Contact</button>
+    <button onclick="window.location.href='https://direct.me/prple'">direct.me</button>
+  </div>
+
+  <div class="profile-frame" id="frame">
+    <div class="banner"></div>
+    <div class="profile-info">
+      <div class="pfp"></div>
+      <div class="text-container">
+        <div class="display-name">nathan</div>
+        <div class="username">@nathan</div>
+      </div>
+    </div>
+    <div class="about-box">hello</div>
+  </div>
+
+  <footer class="footer-container">
+    <div>© spook.bio</div>
+    <a href="https://discord.gg/Gvd4Ruv2Gf" target="_blank" rel="noopener" class="discord-button">
+      <img src="/DiscordLogo.ico" alt="Discord Server" />
+      Join the discord server
+    </a>
+  </footer>
+
+  <script>
+    const frame = document.getElementById('frame');
+    frame.addEventListener('mousemove', (e) => {
+      const rect = frame.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotateY = ((x / rect.width) - 0.5) * 20;
+      const rotateX = ((y / rect.height) - 0.5) * -20;
+      frame.style.transform = `translate(-50%, -50%) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    frame.addEventListener('mouseleave', () => {
+      frame.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
+    });
+
+    const menuButton = document.getElementById('menuButton');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    const menuDropdown = document.getElementById('menuDropdown');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = menuDropdown.style.display === 'flex';
+      menuDropdown.style.display = isOpen ? 'none' : 'flex';
+      menuIcon.style.display = isOpen ? 'flex' : 'none';
+      closeIcon.style.display = isOpen ? 'none' : 'flex';
+    });
+  </script>
+</body>
+</html>
