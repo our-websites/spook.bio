@@ -12,7 +12,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.3",
     "multer": ">=2.0.2",
     "node-fetch": "^3.3.1"
   }
